@@ -29,16 +29,27 @@ $(function () {
   }
 
   function renderTimeBlocks(timeBlocks) {
+    var thisHour = parseInt(dayjs().format("H"));
+    var pastPresentFuture;
+
     timeBlocksContainer.empty(); //jquery
     for (var i = 0; i < timeBlocks.length; i++) {
       var amPm = timeBlocks[i].time;
       if (amPm >= 12) amPm = "pm";
       else amPm = "am";
 
+      if (timeBlocks[i].time < thisHour) {
+        pastPresentFuture = "past";
+      } else if (timeBlocks[i].time === thisHour) {
+        pastPresentFuture = "present";
+      } else {
+        pastPresentFuture = "future";
+      }
+
       var hour = timeBlocks[i].time % 12;
       if (hour === 0) hour = 12;
       var newTimeBlockEl =
-        $(`<div id="hour-${hour}" class="row time-block past">
+        $(`<div id="hour-${hour}" class="row time-block ${pastPresentFuture}">
   <div class="col-2 col-md-1 hour text-center py-3">${hour}${amPm}</div>
   <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
   <button class="btn saveBtn col-2 col-md-1" aria-label="save">
