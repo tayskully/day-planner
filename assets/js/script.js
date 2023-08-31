@@ -1,8 +1,55 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
+//DEPENDENCIES ===========
+
+// DATA ================
+
+//FUNCTIONS====================
+
 $(function () {
-  
+  var timeBlocksContainer = $("#time-blocks");
+  var timeBlocks = generateTimeBlocks();
+  console.log(timeBlocks);
+
+  function generateTimeBlocks() {
+    var startingHour = 8;
+    var endingHour = 17;
+    var timeBlocks = [];
+
+    for (var i = startingHour; i <= endingHour; i++) {
+      var timeBlock = {
+        time: i,
+        events: "",
+      };
+      timeBlocks.push(timeBlock);
+    }
+    return timeBlocks;
+  }
+
+  function renderTimeBlocks(timeBlocks) {
+    timeBlocksContainer.empty(); //jquery
+    for (var i = 0; i < timeBlocks.length; i++) {
+      var amPm = timeBlocks[i].time;
+      if (amPm >= 12) amPm = "pm";
+      else amPm = "am";
+
+      var hour = timeBlocks[i].time % 12;
+      if (hour === 0) hour = 12;
+      var newTimeBlockEl =
+        $(`<div id="hour-${hour}" class="row time-block past">
+  <div class="col-2 col-md-1 hour text-center py-3">${hour}${amPm}</div>
+  <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
+  <button class="btn saveBtn col-2 col-md-1" aria-label="save">
+    <i class="fas fa-save" aria-hidden="true"></i>
+  </button>
+</div>`);
+      timeBlocksContainer.append(newTimeBlockEl);
+    }
+  }
+  renderTimeBlocks(timeBlocks);
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
