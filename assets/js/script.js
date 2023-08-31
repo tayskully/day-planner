@@ -1,9 +1,11 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-
+$(document).ready();
 //DEPENDENCIES ===========
 
+// var calendarInput = $("textarea");
+var calendarInputDate = $("#hour"); //how to target the changing element?? add new id??
 // DATA ================
 
 //FUNCTIONS====================
@@ -51,11 +53,12 @@ $(function () {
 
       var hour = timeBlocks[i].time % 12;
       if (hour === 0) hour = 12;
+      var saveNote = localStorage.getItem(hour + amPm) || "";
       var newTimeBlockEl =
         $(`<div id="hour-${hour}" class="row time-block ${pastPresentFuture}">
   <div class="col-2 col-md-1 hour text-center py-3">${hour}${amPm}</div>
-  <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
-  <button class="btn saveBtn col-2 col-md-1" aria-label="save">
+  <textarea class="col-8 col-md-10 description" rows="3">${saveNote}</textarea>
+  <button class="btn saveBtn save-me col-2 col-md-1" aria-label="save">
     <i class="fas fa-save" aria-hidden="true"></i>
   </button>
 </div>`);
@@ -63,6 +66,17 @@ $(function () {
     }
   }
   renderTimeBlocks(timeBlocks);
+  var saveBtn = $(".saveBtn");
+  saveBtn.on("click", function (event) {
+    event.preventDefault();
+    var siblings = $(this).siblings();
+
+    var time = siblings[0].textContent;
+    
+    var calInput = siblings[1].value;
+
+    localStorage.setItem(time, calInput);
+  });
 });
 
 // TODO: Add a listener for click events on the save button. This code should
